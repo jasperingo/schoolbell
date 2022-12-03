@@ -4,6 +4,7 @@ import com.jasper.schoolbell.dtos.EventCreateDto;
 import com.jasper.schoolbell.dtos.EventDto;
 import com.jasper.schoolbell.entities.Event;
 import com.jasper.schoolbell.entities.Participant;
+import com.jasper.schoolbell.filters.EventExists;
 import com.jasper.schoolbell.filters.HttpStatus;
 import com.jasper.schoolbell.filters.JwtAuth;
 import com.jasper.schoolbell.filters.ResponseMapper;
@@ -66,14 +67,9 @@ public class EventsResource {
     }
 
     @GET
+    @EventExists
     @Path("{id}")
-    public Event getOne(@PathParam("id") final Long id) {
-        final Event event = eventsRepository.findById(id);
-
-        if (event == null) {
-            throw new NotFoundException("Event not found");
-        }
-
-        return event;
+    public Event getOne() {
+        return requestParamService.getEvent();
     }
 }
