@@ -52,4 +52,17 @@ public class UsersResource {
     public User me() {
         return requestParamService.getAuthUser();
     }
+
+    @GET
+    @JwtAuth
+    @Path("{id}")
+    public User getOne(@PathParam("id") final Long id) {
+        final User user = usersRepository.findById(id);
+
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user;
+    }
 }

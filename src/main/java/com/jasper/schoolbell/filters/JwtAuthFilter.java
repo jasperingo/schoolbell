@@ -8,7 +8,7 @@ import com.jasper.schoolbell.repositories.UsersRepository;
 import com.jasper.schoolbell.services.JwtService;
 
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
@@ -46,6 +46,10 @@ public class JwtAuthFilter implements ContainerRequestFilter {
 
             final User user = usersRepository.findById(Long.parseLong(decodedJWT.getSubject()));
 
+            if (user == null) {
+                throw new NotFoundException();
+            }
+
             requestContext.setSecurityContext(new SecurityContext() {
                 @Override
                 public Principal getUserPrincipal() {
@@ -68,7 +72,7 @@ public class JwtAuthFilter implements ContainerRequestFilter {
                 }
             });
 
-        } catch (JWTVerificationException | NoResultException e) {
+        } catch (JWTVerificationException | NotFoundException e) {
             abortWithUnauthorized(requestContext);
         } catch (Exception e) {
             abortWithServerError(requestContext);
