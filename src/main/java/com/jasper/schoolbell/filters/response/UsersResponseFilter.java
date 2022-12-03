@@ -1,8 +1,8 @@
 package com.jasper.schoolbell.filters.response;
 
-import com.jasper.schoolbell.Configuration;
 import com.jasper.schoolbell.dtos.SuccessDto;
 import com.jasper.schoolbell.dtos.UserDto;
+import com.jasper.schoolbell.services.ModelMapperService;
 
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -10,17 +10,12 @@ import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Provider
 @UsersResponse
 public class UsersResponseFilter implements ContainerResponseFilter {
     @Inject
-    private Configuration configuration;
-
-    private UserDto map(Object user) {
-        return configuration.getModelMapper().map(user, UserDto.class);
-    }
+    private ModelMapperService modelMapperService;
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) {
@@ -29,12 +24,12 @@ public class UsersResponseFilter implements ContainerResponseFilter {
 
             if (entity instanceof List) {
                 containerResponseContext.setEntity(new SuccessDto(
-                        ((List<?>) entity).stream()
-                                .map(this::map)
-                                .collect(Collectors.toList()))
-                );
+                    modelMapperService.map((List<?>) entity, UserDto.class)
+                ));
             } else {
-                containerResponseContext.setEntity(new SuccessDto(map(entity)));
+                containerResponseContext.setEntity(new SuccessDto(
+                    modelMapperService.map(entity, UserDto.class)
+                ));
             }
         }
     }

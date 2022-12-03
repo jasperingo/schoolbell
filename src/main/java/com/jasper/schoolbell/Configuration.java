@@ -1,8 +1,6 @@
 package com.jasper.schoolbell;
 
 import lombok.Data;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -34,11 +32,5 @@ public class Configuration {
 
         setJwtKey(prop.getProperty("jwtKey"));
         setJwtDuration(Integer.parseInt(prop.getProperty("jwtDuration")));
-    }
-
-    public ModelMapper getModelMapper() {
-        final ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        return modelMapper;
     }
 }
