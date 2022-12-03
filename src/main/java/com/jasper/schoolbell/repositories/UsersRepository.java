@@ -15,6 +15,10 @@ public class UsersRepository {
         configuration.getEntityManager().persist(user);
     }
 
+    public User findById(final Long id) {
+        return configuration.getEntityManager().find(User.class, id);
+    }
+
     public User findByPhoneNumber(final String phoneNumber) {
         return configuration.getEntityManager()
             .createQuery("SELECT u FROM User u WHERE u.phoneNumber = ?1", User.class)

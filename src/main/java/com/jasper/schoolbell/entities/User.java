@@ -3,12 +3,13 @@ package com.jasper.schoolbell.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.nio.file.attribute.UserPrincipal;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserPrincipal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,5 +33,10 @@ public class User {
     @PostPersist
     private void postPersist() {
         createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String getName() {
+        return phoneNumber;
     }
 }

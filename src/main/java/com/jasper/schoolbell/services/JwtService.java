@@ -2,6 +2,7 @@ package com.jasper.schoolbell.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.jasper.schoolbell.Configuration;
 import com.jasper.schoolbell.entities.User;
 
@@ -29,5 +30,12 @@ public class JwtService {
                 .withIssuer("auth0")
                 .withExpiresAt(getExpiration())
                 .sign(Algorithm.HMAC256(configuration.getJwtKey()));
+    }
+
+    public DecodedJWT verifyToken(final String token) {
+        return JWT.require(Algorithm.HMAC256(configuration.getJwtKey()))
+            .withIssuer("auth0")
+            .build()
+            .verify(token);
     }
 }

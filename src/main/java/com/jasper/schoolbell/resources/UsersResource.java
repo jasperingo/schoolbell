@@ -3,10 +3,12 @@ package com.jasper.schoolbell.resources;
 import com.jasper.schoolbell.dtos.UserCreateDto;
 import com.jasper.schoolbell.entities.User;
 import com.jasper.schoolbell.filters.HttpStatus;
+import com.jasper.schoolbell.filters.JwtAuth;
 import com.jasper.schoolbell.filters.response.UsersResponse;
 import com.jasper.schoolbell.repositories.UsersRepository;
 import com.jasper.schoolbell.services.ModelMapperService;
 import com.jasper.schoolbell.services.PasswordHashService;
+import com.jasper.schoolbell.services.RequestParamService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -29,6 +31,9 @@ public class UsersResource {
    @Inject
    private ModelMapperService modelMapperService;
 
+   @Inject
+   private RequestParamService requestParamService;
+
     @POST
     @HttpStatus(Response.Status.CREATED)
     public User create(@NotNull @Valid final UserCreateDto userDto) {
@@ -39,5 +44,12 @@ public class UsersResource {
         usersRepository.save(user);
 
         return user;
+    }
+
+    @GET
+    @JwtAuth
+    @Path("me")
+    public User me() {
+        return requestParamService.getAuthUser();
     }
 }
