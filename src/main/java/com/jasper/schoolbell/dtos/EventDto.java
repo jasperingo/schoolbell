@@ -3,16 +3,17 @@ package com.jasper.schoolbell.dtos;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-public class UserDto {
+public class EventDto {
     private Long id;
 
-    private String firstName;
+    private String title;
 
-    private String lastName;
-
-    private String phoneNumber;
+    private String description;
 
     private LocalDateTime createdAt;
+
+    private List<ParticipantDto> participants;
 }

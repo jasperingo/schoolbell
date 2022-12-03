@@ -5,14 +5,12 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class UserDto {
+public class ParticipantDto {
     private Long id;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String phoneNumber;
+    private boolean host;
 
     private LocalDateTime createdAt;
+
+    private UserDto user;
 }

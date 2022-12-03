@@ -2,6 +2,7 @@ package com.jasper.schoolbell.exceptions;
 
 import com.jasper.schoolbell.dtos.ErrorDto;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -21,6 +22,7 @@ public class AllExceptionMapper implements ExceptionMapper<Exception> {
 
         return responseBuilder
                 .entity(new ErrorDto(exception.getMessage()))
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .build();
     }
 }

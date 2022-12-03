@@ -4,45 +4,33 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.nio.file.attribute.UserPrincipal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "users")
-public class User implements UserPrincipal {
+@Table(name = "events")
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String firstName;
+    private String title;
 
     @Column(nullable = false)
-    private String lastName;
-
-    @Column(nullable = false, unique = true)
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    private String password;
+    private String description;
 
     @Column(nullable = false, insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "event")
     private List<Participant> participants;
 
     @PostPersist
     private void postPersist() {
         createdAt = LocalDateTime.now();
-    }
-
-    @Override
-    public String getName() {
-        return phoneNumber;
     }
 }
