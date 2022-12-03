@@ -15,10 +15,7 @@ import com.jasper.schoolbell.services.RequestParamService;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -58,6 +55,18 @@ public class EventsResource {
 
         event.setParticipants(new ArrayList<>());
         event.getParticipants().add(participant);
+
+        return event;
+    }
+
+    @GET
+    @Path("{id}")
+    public Event getOne(@PathParam("id") final Long id) {
+        final Event event = eventsRepository.findById(id);
+
+        if (event == null) {
+            throw new NotFoundException("Event not found");
+        }
 
         return event;
     }
