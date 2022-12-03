@@ -18,6 +18,10 @@
           <element id="library" level="project" name="Maven: com.password4j:password4j:1.6.2" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:2.0.3" />
           <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:3.1.0" />
+          <element id="library" level="project" name="Maven: com.auth0:java-jwt:4.2.1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.4.2" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.13.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.13.4" />
         </element>
       </element>
       <element id="directory" name="META-INF">

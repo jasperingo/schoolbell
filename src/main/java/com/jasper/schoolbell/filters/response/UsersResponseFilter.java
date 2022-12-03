@@ -18,6 +18,10 @@ public class UsersResponseFilter implements ContainerResponseFilter {
     @Inject
     private Configuration configuration;
 
+    private UserDto map(Object user) {
+        return configuration.getModelMapper().map(user, UserDto.class);
+    }
+
     @Override
     public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) {
         if (containerResponseContext.getStatus() < 400) {
@@ -25,12 +29,12 @@ public class UsersResponseFilter implements ContainerResponseFilter {
 
             if (entity instanceof List) {
                 containerResponseContext.setEntity(new SuccessDto(
-                        ((List<Object>) entity).stream()
-                                .map(user -> configuration.getModelMapper().map(user, UserDto.class))
+                        ((List<?>) entity).stream()
+                                .map(this::map)
                                 .collect(Collectors.toList()))
                 );
             } else {
-                containerResponseContext.setEntity(new SuccessDto(configuration.getModelMapper().map(entity, UserDto.class)));
+                containerResponseContext.setEntity(new SuccessDto(map(entity)));
             }
         }
     }

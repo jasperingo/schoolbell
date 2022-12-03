@@ -3,6 +3,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 tomee.xml
+*application.properties
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
