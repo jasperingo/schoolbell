@@ -1,10 +1,11 @@
 package com.jasper.schoolbell.resources;
 
 import com.jasper.schoolbell.dtos.UserCreateDto;
+import com.jasper.schoolbell.dtos.UserDto;
 import com.jasper.schoolbell.entities.User;
 import com.jasper.schoolbell.filters.HttpStatus;
 import com.jasper.schoolbell.filters.JwtAuth;
-import com.jasper.schoolbell.filters.response.UsersResponse;
+import com.jasper.schoolbell.filters.ResponseMapper;
 import com.jasper.schoolbell.repositories.UsersRepository;
 import com.jasper.schoolbell.services.ModelMapperService;
 import com.jasper.schoolbell.services.PasswordHashService;
@@ -19,7 +20,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("users")
-@UsersResponse
+@ResponseMapper(UserDto.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {

@@ -1,11 +1,12 @@
 package com.jasper.schoolbell.resources;
 
 import com.jasper.schoolbell.dtos.EventCreateDto;
+import com.jasper.schoolbell.dtos.EventDto;
 import com.jasper.schoolbell.entities.Event;
 import com.jasper.schoolbell.entities.Participant;
 import com.jasper.schoolbell.filters.HttpStatus;
 import com.jasper.schoolbell.filters.JwtAuth;
-import com.jasper.schoolbell.filters.response.EventsResponse;
+import com.jasper.schoolbell.filters.ResponseMapper;
 import com.jasper.schoolbell.repositories.EventsRepository;
 import com.jasper.schoolbell.repositories.ParticipantsRepository;
 import com.jasper.schoolbell.services.ModelMapperService;
@@ -23,8 +24,8 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 @JwtAuth
-@EventsResponse
 @Path("events")
+@ResponseMapper(EventDto.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EventsResource {
