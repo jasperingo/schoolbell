@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("users")
 @UsersResponse
@@ -44,6 +45,12 @@ public class UsersResource {
         usersRepository.save(user);
 
         return user;
+    }
+
+    @GET
+    @JwtAuth
+    public List<User> getMany() {
+        return usersRepository.findMany();
     }
 
     @GET

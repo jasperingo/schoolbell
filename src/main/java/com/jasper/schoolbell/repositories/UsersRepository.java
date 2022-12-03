@@ -5,6 +5,7 @@ import com.jasper.schoolbell.entities.User;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 public class UsersRepository {
@@ -13,6 +14,12 @@ public class UsersRepository {
 
     public void save(final User user) {
         configuration.getEntityManager().persist(user);
+    }
+
+    public List<User> findMany() {
+        return configuration.getEntityManager()
+            .createQuery("SELECT u FROM User u", User.class)
+            .getResultList();
     }
 
     public User findById(final Long id) {
