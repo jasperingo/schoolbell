@@ -6,8 +6,10 @@ import com.jasper.schoolbell.entities.User;
 import com.jasper.schoolbell.repositories.UsersRepository;
 import com.jasper.schoolbell.services.JwtService;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
@@ -15,8 +17,9 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 import java.security.Principal;
 
-@Provider
 @JwtAuth
+@Provider
+@Priority(Priorities.AUTHENTICATION)
 public class JwtAuthFilter implements ContainerRequestFilter {
     public static final String REALM = "example";
     public static final String AUTHENTICATION_SCHEME = "Bearer";
@@ -69,7 +72,7 @@ public class JwtAuthFilter implements ContainerRequestFilter {
                 }
             });
 
-        } catch (JWTVerificationException e) {
+        } catch (JWTVerificationException | IllegalArgumentException e) {
             throw new NotAuthorizedException("Access token is invalid", "");
         }
     }

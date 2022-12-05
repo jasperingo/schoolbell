@@ -24,7 +24,7 @@ public class Participant {
     @JoinColumn(name = "eventId")
     private Event event;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
     private User user;
 

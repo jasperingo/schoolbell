@@ -4,10 +4,7 @@ import com.jasper.schoolbell.dtos.EventCreateDto;
 import com.jasper.schoolbell.dtos.EventDto;
 import com.jasper.schoolbell.entities.Event;
 import com.jasper.schoolbell.entities.Participant;
-import com.jasper.schoolbell.filters.EventExists;
-import com.jasper.schoolbell.filters.HttpStatus;
-import com.jasper.schoolbell.filters.JwtAuth;
-import com.jasper.schoolbell.filters.ResponseMapper;
+import com.jasper.schoolbell.filters.*;
 import com.jasper.schoolbell.repositories.EventsRepository;
 import com.jasper.schoolbell.repositories.ParticipantsRepository;
 import com.jasper.schoolbell.services.ModelMapperService;
@@ -71,5 +68,24 @@ public class EventsResource {
     @Path("{id}")
     public Event getOne() {
         return requestParamService.getEvent();
+    }
+
+    @POST
+    @EventExists
+    @Path("{id}/join")
+    @EventJoinPermission
+    public Event join() {
+        final Event event = requestParamService.getEvent();
+        final Participant participant = new Participant();
+
+        participant.setHost(false);
+        participant.setEvent(event);
+        participant.setUser(requestParamService.getAuthUser());
+
+        participantsRepository.save(participant);
+
+        event.getParticipants().add(participant);
+
+        return event;
     }
 }
