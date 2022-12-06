@@ -88,4 +88,20 @@ public class EventsResource {
 
         return event;
     }
+
+    @POST
+    @EventExists
+    @Path("{id}/leave")
+    @EventLeavePermission
+    public Event leave() {
+        final Participant participant = requestParamService.getParticipant();
+
+        participantsRepository.delete(participant);
+
+        final Event event = requestParamService.getEvent();
+
+        event.getParticipants().remove(participant);
+
+        return event;
+    }
 }

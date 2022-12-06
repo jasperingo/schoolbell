@@ -14,4 +14,8 @@ public class ParticipantsRepository {
     public void save(final Participant participant) {
         configuration.getEntityManager().persist(participant);
     }
+
+    public void delete(final Participant participant) {
+        configuration.getEntityManager().remove(configuration.getEntityManager().merge(participant));
+    }
 }

@@ -1,5 +1,6 @@
 package com.jasper.schoolbell.filters;
 
+import com.jasper.schoolbell.entities.Participant;
 import com.jasper.schoolbell.entities.User;
 import com.jasper.schoolbell.services.RequestParamService;
 
@@ -11,11 +12,12 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.ext.Provider;
 import java.util.Objects;
+import java.util.Optional;
 
 @Provider
-@EventJoinPermission
+@EventLeavePermission
 @Priority(Priorities.AUTHORIZATION)
-public class EventJoinPermissionFilter implements ContainerRequestFilter {
+public class EventLeavePermissionFilter implements ContainerRequestFilter {
     @Inject
     private RequestParamService requestParamService;
 
@@ -23,11 +25,17 @@ public class EventJoinPermissionFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext containerRequestContext) {
         final User user = requestParamService.getAuthUser();
 
-        requestParamService.getEvent().getParticipants()
+        final Optional<Participant> participantOptional = requestParamService.getEvent().getParticipants()
             .stream()
             .filter(participant -> Objects.equals(participant.getUser().getId(), user.getId()))
-            .findFirst()
-            .ifPresent(participant -> { throw new ForbiddenException("You are already a participant of this event"); });
+            .findFirst();
 
+        if (participantOptional.isPresent() && participantOptional.get().isHost()) {
+            throw new ForbiddenException("Host cannot leave the event");
+        } else if (!participantOptional.isPresent()) {
+            throw new ForbiddenException("You are not a participant of this event");
+        } else {
+            containerRequestContext.setProperty(Participant.class.getName(), participantOptional.get());
+        }
     }
 }
