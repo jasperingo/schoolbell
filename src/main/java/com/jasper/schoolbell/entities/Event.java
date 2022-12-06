@@ -29,6 +29,10 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private List<Participant> participants;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "event")
+    private List<EventOccurrence> eventOccurrences;
+
     @PostPersist
     private void postPersist() {
         createdAt = LocalDateTime.now();

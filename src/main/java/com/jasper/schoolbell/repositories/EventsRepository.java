@@ -34,7 +34,7 @@ public class EventsRepository {
 
     public Event findById(final Long id) {
         return configuration.getEntityManager()
-            .createQuery("SELECT e FROM Event e JOIN FETCH e.participants WHERE e.id = ?1", Event.class)
+            .createQuery("SELECT e FROM Event e JOIN FETCH e.participants LEFT JOIN FETCH e.eventOccurrences WHERE e.id = ?1", Event.class)
             .setParameter(1, id)
             .getSingleResult();
     }

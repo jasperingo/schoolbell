@@ -21,9 +21,9 @@ import java.util.List;
 
 @JwtAuth
 @Path("events")
-@ResponseMapper(EventDto.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@ResponseMapper(EventDto.WithRelations.class)
 public class EventsResource {
     @Inject
     private ModelMapperService modelMapperService;

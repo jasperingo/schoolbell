@@ -15,5 +15,10 @@ public class EventDto {
 
     private LocalDateTime createdAt;
 
-    private List<ParticipantDto> participants;
+    @Data
+    public static class WithRelations extends EventDto {
+        private List<ParticipantDto> participants;
+
+        private List<EventOccurrenceDto> eventOccurrences;
+    }
 }
