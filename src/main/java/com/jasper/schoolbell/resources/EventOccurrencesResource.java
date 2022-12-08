@@ -7,6 +7,7 @@ import com.jasper.schoolbell.entities.EventOccurrence;
 import com.jasper.schoolbell.filters.*;
 import com.jasper.schoolbell.repositories.EventOccurrencesRepository;
 import com.jasper.schoolbell.repositories.EventsRepository;
+import com.jasper.schoolbell.services.CallService;
 import com.jasper.schoolbell.services.ModelMapperService;
 import com.jasper.schoolbell.services.RequestParamService;
 
@@ -24,6 +25,9 @@ import java.time.LocalDateTime;
 @Produces(MediaType.APPLICATION_JSON)
 @ResponseMapper(EventOccurrenceDto.WithRelations.class)
 public class EventOccurrencesResource {
+    @Inject
+    private CallService callService;
+
     @Inject
     private ModelMapperService modelMapperService;
 
@@ -59,6 +63,15 @@ public class EventOccurrencesResource {
 
         eventOccurrencesRepository.update(eventOccurrence);
 
+        callService.sendCall(
+            eventOccurrence,
+            String.format(
+                "Your event %s scheduled for %s, has been cancelled.",
+                eventOccurrence.getEvent().getTitle(),
+                eventOccurrence.getStartedAt()
+            )
+        );
+
         return eventOccurrence;
     }
 
@@ -69,9 +82,21 @@ public class EventOccurrencesResource {
     public EventOccurrence updateStartAt(@NotNull @Valid final EventOccurrenceUpdateStartDateDto startDateDto) {
         final EventOccurrence eventOccurrence = requestParamService.getEventOccurrence();
 
+        final LocalDateTime oldStartAt = eventOccurrence.getStartedAt();
+
         eventOccurrence.setStartedAt(startDateDto.getStartedAt());
 
         eventOccurrencesRepository.update(eventOccurrence);
+
+        callService.sendCall(
+            eventOccurrence,
+            String.format(
+                "Your event %s scheduled for %s, has been postponed to %s.",
+                eventOccurrence.getEvent().getTitle(),
+                oldStartAt,
+                eventOccurrence.getStartedAt()
+            )
+        );
 
         return eventOccurrence;
     }
@@ -81,6 +106,17 @@ public class EventOccurrencesResource {
     @Path("{id}/remind")
     @EventOccurrenceUpdatePermission
     public EventOccurrence remind() {
-        return requestParamService.getEventOccurrence();
+        final EventOccurrence eventOccurrence = requestParamService.getEventOccurrence();
+
+        callService.sendCall(
+            eventOccurrence,
+            String.format(
+                "Please remember your event %s will start by %s.",
+                eventOccurrence.getEvent().getTitle(),
+                eventOccurrence.getStartedAt()
+            )
+        );
+
+        return eventOccurrence;
     }
 }

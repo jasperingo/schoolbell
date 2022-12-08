@@ -14,6 +14,7 @@
           <element id="module-output" name="schoolbell" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.3.0" />
           <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.18.24" />
           <element id="library" level="project" name="Maven: com.password4j:password4j:1.6.2" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:2.0.3" />

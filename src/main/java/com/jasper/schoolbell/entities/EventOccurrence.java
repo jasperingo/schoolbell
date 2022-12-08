@@ -1,9 +1,11 @@
 package com.jasper.schoolbell.entities;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -45,6 +47,10 @@ public class EventOccurrence {
     @ManyToOne
     @JoinColumn(name = "eventId")
     private Event event;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "eventOccurrence")
+    private List<Alert> alerts;
 
     @PostPersist
     private void postPersist() {

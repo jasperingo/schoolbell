@@ -20,6 +20,14 @@ public class Configuration {
 
     private int jwtDuration;
 
+    private String africansTalkingApiKey;
+
+    private String africansTalkingApiEndPoint;
+
+    private String africansTalkingAppUsername;
+
+    private String africansTalkingPhoneNumber;
+
     @PostConstruct
     public void init() throws IOException {
         final InputStream inputStream  = Configuration.class
@@ -32,5 +40,9 @@ public class Configuration {
 
         setJwtKey(prop.getProperty("jwtKey"));
         setJwtDuration(Integer.parseInt(prop.getProperty("jwtDuration")));
+        setAfricansTalkingApiKey(prop.getProperty("afAPIKey"));
+        setAfricansTalkingApiEndPoint(prop.getProperty("afAPIEndPoint"));
+        setAfricansTalkingAppUsername(prop.getProperty("afAppUsername"));
+        setAfricansTalkingPhoneNumber(prop.getProperty("afPhoneNumber"));
     }
 }
