@@ -2,6 +2,7 @@ package com.jasper.schoolbell.resources;
 
 import com.jasper.schoolbell.dtos.EventOccurrenceCreateDto;
 import com.jasper.schoolbell.dtos.EventOccurrenceDto;
+import com.jasper.schoolbell.dtos.EventOccurrenceUpdateStartDateDto;
 import com.jasper.schoolbell.entities.EventOccurrence;
 import com.jasper.schoolbell.filters.*;
 import com.jasper.schoolbell.repositories.EventOccurrencesRepository;
@@ -55,6 +56,20 @@ public class EventOccurrencesResource {
         final EventOccurrence eventOccurrence = requestParamService.getEventOccurrence();
 
         eventOccurrence.setCancelledAt(LocalDateTime.now());
+
+        eventOccurrencesRepository.update(eventOccurrence);
+
+        return eventOccurrence;
+    }
+
+    @PUT
+    @EventOccurrenceExists
+    @Path("{id}/started-at")
+    @EventOccurrenceUpdatePermission
+    public EventOccurrence updateStartAt(@NotNull @Valid final EventOccurrenceUpdateStartDateDto startDateDto) {
+        final EventOccurrence eventOccurrence = requestParamService.getEventOccurrence();
+
+        eventOccurrence.setStartedAt(startDateDto.getStartedAt());
 
         eventOccurrencesRepository.update(eventOccurrence);
 

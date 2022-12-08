@@ -23,20 +23,24 @@ public class EventOccurrenceStartDateIsUniqueValidator implements ConstraintVali
         try {
             final Event event = eventsRepository.findById(dto.getEventId());
 
-            for (EventOccurrence eventOccurrence: event.getEventOccurrences()) {
-                if (eventOccurrence.getCancelledAt() == null) {
-                    long se = eventOccurrence.getStartedAt().toEpochSecond(ZoneOffset.UTC);
-                    long ee = eventOccurrence.getStartedAt().plusMinutes(eventOccurrence.getDuration()).toEpochSecond(ZoneOffset.UTC);
-
-                    if (startEpoch == se || endEpoch == ee) {
-                        throw new IllegalArgumentException();
-                    }
-                }
-            }
-
-            return true;
+            return validate(startEpoch, endEpoch, event);
         } catch (NoResultException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public static boolean validate(long startEpoch, long endEpoch, Event event) {
+        for (EventOccurrence eventOccurrence: event.getEventOccurrences()) {
+            if (eventOccurrence.getCancelledAt() == null) {
+                long se = eventOccurrence.getStartedAt().toEpochSecond(ZoneOffset.UTC);
+                long ee = eventOccurrence.getStartedAt().plusMinutes(eventOccurrence.getDuration()).toEpochSecond(ZoneOffset.UTC);
+
+                if (startEpoch == se || endEpoch == ee) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
+        return true;
     }
 }
