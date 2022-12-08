@@ -3,22 +3,19 @@ package com.jasper.schoolbell.resources;
 import com.jasper.schoolbell.dtos.EventOccurrenceCreateDto;
 import com.jasper.schoolbell.dtos.EventOccurrenceDto;
 import com.jasper.schoolbell.entities.EventOccurrence;
-import com.jasper.schoolbell.filters.HttpStatus;
-import com.jasper.schoolbell.filters.JwtAuth;
-import com.jasper.schoolbell.filters.ResponseMapper;
+import com.jasper.schoolbell.filters.*;
 import com.jasper.schoolbell.repositories.EventOccurrencesRepository;
 import com.jasper.schoolbell.repositories.EventsRepository;
 import com.jasper.schoolbell.services.ModelMapperService;
+import com.jasper.schoolbell.services.RequestParamService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
 
 @JwtAuth
 @Path("event-occurrences")
@@ -28,6 +25,9 @@ import javax.ws.rs.core.Response;
 public class EventOccurrencesResource {
     @Inject
     private ModelMapperService modelMapperService;
+
+    @Inject
+    private RequestParamService requestParamService;
 
     @Inject
     private EventsRepository eventsRepository;
@@ -43,6 +43,20 @@ public class EventOccurrencesResource {
         eventOccurrence.setEvent(eventsRepository.findById(eventOccurrenceDto.getEventId()));
 
         eventOccurrencesRepository.save(eventOccurrence);
+
+        return eventOccurrence;
+    }
+
+    @PUT
+    @EventOccurrenceExists
+    @Path("{id}/cancelled-at")
+    @EventOccurrenceUpdatePermission
+    public EventOccurrence updateCancelledAt() {
+        final EventOccurrence eventOccurrence = requestParamService.getEventOccurrence();
+
+        eventOccurrence.setCancelledAt(LocalDateTime.now());
+
+        eventOccurrencesRepository.update(eventOccurrence);
 
         return eventOccurrence;
     }

@@ -1,6 +1,7 @@
 package com.jasper.schoolbell.services;
 
 import com.jasper.schoolbell.entities.Event;
+import com.jasper.schoolbell.entities.EventOccurrence;
 import com.jasper.schoolbell.entities.Participant;
 import com.jasper.schoolbell.entities.User;
 
@@ -24,5 +25,9 @@ public class RequestParamService {
     }
     public Participant getParticipant() {
         return (Participant) httpServletRequest.getAttribute(Participant.class.getName());
+    }
+
+    public EventOccurrence getEventOccurrence() {
+        return (EventOccurrence) httpServletRequest.getAttribute(EventOccurrence.class.getName());
     }
 }
