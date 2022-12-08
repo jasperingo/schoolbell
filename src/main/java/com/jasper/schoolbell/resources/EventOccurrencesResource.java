@@ -75,4 +75,12 @@ public class EventOccurrencesResource {
 
         return eventOccurrence;
     }
+
+    @POST
+    @EventOccurrenceExists
+    @Path("{id}/remind")
+    @EventOccurrenceUpdatePermission
+    public EventOccurrence remind() {
+        return requestParamService.getEventOccurrence();
+    }
 }
