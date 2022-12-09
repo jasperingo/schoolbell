@@ -1,14 +1,17 @@
 package com.jasper.schoolbell.resources;
 
 import com.jasper.schoolbell.dtos.EventDto;
+import com.jasper.schoolbell.dtos.EventOccurrenceDto;
 import com.jasper.schoolbell.dtos.UserCreateDto;
 import com.jasper.schoolbell.dtos.UserDto;
 import com.jasper.schoolbell.entities.Event;
+import com.jasper.schoolbell.entities.EventOccurrence;
 import com.jasper.schoolbell.entities.User;
 import com.jasper.schoolbell.filters.HttpStatus;
 import com.jasper.schoolbell.filters.JwtAuth;
 import com.jasper.schoolbell.filters.ResponseMapper;
 import com.jasper.schoolbell.filters.UserExists;
+import com.jasper.schoolbell.repositories.EventOccurrencesRepository;
 import com.jasper.schoolbell.repositories.EventsRepository;
 import com.jasper.schoolbell.repositories.UsersRepository;
 import com.jasper.schoolbell.services.ModelMapperService;
@@ -33,6 +36,9 @@ public class UsersResource {
 
    @Inject
    private EventsRepository eventsRepository;
+
+   @Inject
+   private EventOccurrencesRepository eventOccurrencesRepository;
 
    @Inject
    private PasswordHashService passwordHashService;
@@ -82,6 +88,15 @@ public class UsersResource {
     @Path("{id}/events")
     @ResponseMapper(EventDto.WithRelations.class)
     public List<Event> getEvents() {
-        return eventsRepository.findByParticipantUserId(requestParamService.getUser().getId());
+        return eventsRepository.findManyByParticipantUserId(requestParamService.getUser().getId());
+    }
+
+    @GET
+    @JwtAuth
+    @UserExists
+    @Path("{id}/event-occurrences")
+    @ResponseMapper(EventOccurrenceDto.WithRelations.class)
+    public List<EventOccurrence> getEventOccurrences() {
+        return eventOccurrencesRepository.findManyByEventParticipantUserId(requestParamService.getUser().getId());
     }
 }

@@ -46,7 +46,7 @@ public class EventsRepository {
         return list;
     }
 
-    public List<Event> findByParticipantUserId(final Long userId) {
+    public List<Event> findManyByParticipantUserId(final Long userId) {
         return configuration.getEntityManager()
             .createQuery("SELECT e FROM Event e LEFT JOIN e.participants pa LEFT JOIN pa.user u WHERE u.id = ?1", Event.class)
             .setParameter(1, userId)
