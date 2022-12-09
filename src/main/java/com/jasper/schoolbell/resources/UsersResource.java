@@ -1,11 +1,15 @@
 package com.jasper.schoolbell.resources;
 
+import com.jasper.schoolbell.dtos.EventDto;
 import com.jasper.schoolbell.dtos.UserCreateDto;
 import com.jasper.schoolbell.dtos.UserDto;
+import com.jasper.schoolbell.entities.Event;
 import com.jasper.schoolbell.entities.User;
 import com.jasper.schoolbell.filters.HttpStatus;
 import com.jasper.schoolbell.filters.JwtAuth;
 import com.jasper.schoolbell.filters.ResponseMapper;
+import com.jasper.schoolbell.filters.UserExists;
+import com.jasper.schoolbell.repositories.EventsRepository;
 import com.jasper.schoolbell.repositories.UsersRepository;
 import com.jasper.schoolbell.services.ModelMapperService;
 import com.jasper.schoolbell.services.PasswordHashService;
@@ -26,6 +30,9 @@ import java.util.List;
 public class UsersResource {
    @Inject
    private UsersRepository usersRepository;
+
+   @Inject
+   private EventsRepository eventsRepository;
 
    @Inject
    private PasswordHashService passwordHashService;
@@ -63,14 +70,18 @@ public class UsersResource {
 
     @GET
     @JwtAuth
+    @UserExists
     @Path("{id}")
-    public User getOne(@PathParam("id") final Long id) {
-        final User user = usersRepository.findById(id);
+    public User getOne() {
+        return requestParamService.getUser();
+    }
 
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-
-        return user;
+    @GET
+    @JwtAuth
+    @UserExists
+    @Path("{id}/events")
+    @ResponseMapper(EventDto.WithRelations.class)
+    public List<Event> getEvents() {
+        return eventsRepository.findByParticipantUserId(requestParamService.getUser().getId());
     }
 }

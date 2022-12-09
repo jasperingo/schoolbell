@@ -20,26 +20,49 @@ public class EventsRepository {
         configuration.getEntityManager().persist(event);
     }
 
+    private List<Participant> findHostParticipant(final Event event) {
+        return configuration.getEntityManager()
+            .createQuery("SELECT p FROM Participant p WHERE p.event.id = ?1 AND p.host = true", Participant.class)
+            .setParameter(1, event.getId())
+            .getResultList();
+    }
+
+    private List<EventOccurrence> findNextOrLastEventOccurrence(final Event event) {
+         List<EventOccurrence> list = configuration.getEntityManager()
+            .createQuery("SELECT eo FROM EventOccurrence eo WHERE eo.event.id = ?1 AND eo.startedAt >= ?2 ORDER BY eo.startedAt ASC", EventOccurrence.class)
+            .setParameter(1, event.getId())
+            .setParameter(2, LocalDateTime.now())
+            .setMaxResults(1)
+            .getResultList();
+
+        if (list.isEmpty()) {
+            list = configuration.getEntityManager()
+                .createQuery("SELECT eo FROM EventOccurrence eo WHERE eo.event.id = ?1 ORDER BY eo.startedAt DESC", EventOccurrence.class)
+                .setParameter(1, event.getId())
+                .setMaxResults(1)
+                .getResultList();
+        }
+
+        return list;
+    }
+
+    public List<Event> findByParticipantUserId(final Long userId) {
+        return configuration.getEntityManager()
+            .createQuery("SELECT e FROM Event e LEFT JOIN e.participants pa LEFT JOIN pa.user u WHERE u.id = ?1", Event.class)
+            .setParameter(1, userId)
+            .getResultStream()
+            .peek(event -> event.setParticipants(findHostParticipant(event)))
+            .peek(event -> event.setEventOccurrences(findNextOrLastEventOccurrence(event)))
+            .collect(Collectors.toList());
+    }
+
     public List<Event> findMany() {
         return configuration.getEntityManager()
             .createQuery("SELECT e FROM Event e", Event.class)
-            .getResultList()
-            .stream()
-            .peek(event -> event.setParticipants(
-                configuration.getEntityManager()
-                    .createQuery("SELECT p FROM Participant p WHERE p.event.id = ?1 AND p.host = true", Participant.class)
-                    .setParameter(1, event.getId())
-                    .getResultList()
-            ))
-            .peek(event -> event.setEventOccurrences(
-                configuration.getEntityManager()
-                    .createQuery("SELECT eo FROM EventOccurrence eo WHERE eo.event.id = ?1 AND eo.startedAt >= ?2 ORDER BY eo.startedAt ASC", EventOccurrence.class)
-                    .setParameter(1, event.getId())
-                    .setParameter(2, LocalDateTime.now())
-                    .setMaxResults(1)
-                    .getResultList()
-            )).
-            collect(Collectors.toList());
+            .getResultStream()
+            .peek(event -> event.setParticipants(findHostParticipant(event)))
+            .peek(event -> event.setEventOccurrences(findNextOrLastEventOccurrence(event)))
+            .collect(Collectors.toList());
     }
 
     public Event findById(final Long id) {

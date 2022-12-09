@@ -20,9 +20,14 @@ public class RequestParamService {
         return (User) securityContext.getUserPrincipal();
     }
 
+    public User getUser() {
+        return (User) httpServletRequest.getAttribute(User.class.getName());
+    }
+
     public Event getEvent() {
         return (Event) httpServletRequest.getAttribute(Event.class.getName());
     }
+
     public Participant getParticipant() {
         return (Participant) httpServletRequest.getAttribute(Participant.class.getName());
     }
