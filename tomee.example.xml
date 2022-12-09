@@ -2,10 +2,11 @@
 <tomee>
   <Resource id="jdbc/MySQLDatabase" type="DataSource">
       #  MySQL example
-      JdbcDriver  com.mysql.jdbc.Driver
-      JdbcUrl jdbc:mysql://host.docker.internal:3306/schoolbell
-      UserName    root
-      Password    [Your password]
+
+      JdbcDriver = com.mysql.jdbc.Driver
+      JdbcUrl = jdbc:mysql://host.docker.internal:3306/schoolbell
+      UserName = root
+      Password = [Your password]
   </Resource>
 
 </tomee>
