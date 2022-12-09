@@ -52,6 +52,13 @@ public class EventOccurrencesResource {
         return eventOccurrence;
     }
 
+    @GET
+    @Path("{id}")
+    @EventOccurrenceExists
+    public EventOccurrence findOne() {
+        return requestParamService.getEventOccurrence();
+    }
+
     @PUT
     @EventOccurrenceExists
     @Path("{id}/cancelled-at")
