@@ -29,7 +29,6 @@ public class Alert {
     private Double cost;
 
     @Column(nullable = false, insertable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @ManyToOne

@@ -34,14 +34,11 @@ public class EventOccurrence {
     private int duration;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime startedAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime cancelledAt;
 
     @Column(nullable = false, insertable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @ManyToOne

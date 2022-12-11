@@ -29,7 +29,6 @@ public class User implements UserPrincipal {
     private String password;
 
     @Column(nullable = false, insertable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @ToString.Exclude
