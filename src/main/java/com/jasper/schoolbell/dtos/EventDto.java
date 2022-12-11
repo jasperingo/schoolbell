@@ -16,6 +16,11 @@ public class EventDto {
     private LocalDateTime createdAt;
 
     @Data
+    public static class WithParticipants extends EventDto {
+        private List<ParticipantDto> participants;
+    }
+
+    @Data
     public static class WithRelations extends EventDto {
         private List<ParticipantDto> participants;
 

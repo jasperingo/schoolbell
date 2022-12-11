@@ -27,6 +27,6 @@ public class EventOccurrenceDto {
 
     @Data
     public static class WithRelations extends EventOccurrenceDto {
-        private EventDto event;
+        private EventDto.WithParticipants event;
     }
 }
