@@ -4,6 +4,7 @@ import com.jasper.schoolbell.dtos.EventCreateDto;
 import com.jasper.schoolbell.dtos.EventDto;
 import com.jasper.schoolbell.entities.Event;
 import com.jasper.schoolbell.entities.Participant;
+import com.jasper.schoolbell.entities.User;
 import com.jasper.schoolbell.filters.*;
 import com.jasper.schoolbell.repositories.EventsRepository;
 import com.jasper.schoolbell.repositories.ParticipantsRepository;
@@ -11,11 +12,13 @@ import com.jasper.schoolbell.services.ModelMapperService;
 import com.jasper.schoolbell.services.RequestParamService;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,13 +79,24 @@ public class EventsResource {
     @EventJoinPermission
     public Event join() {
         final Event event = requestParamService.getEvent();
-        final Participant participant = new Participant();
+        final User user = requestParamService.getAuthUser();
+        Participant participant;
 
-        participant.setHost(false);
-        participant.setEvent(event);
-        participant.setUser(requestParamService.getAuthUser());
+        try {
+            participant = participantsRepository.findByEventIdAndUserId(event.getId(), user.getId());
 
-        participantsRepository.save(participant);
+            participant.setDeletedAt(null);
+
+            participantsRepository.update(participant);
+        } catch (NoResultException e) {
+            participant = new Participant();
+
+            participant.setHost(false);
+            participant.setEvent(event);
+            participant.setUser(user);
+
+            participantsRepository.save(participant);
+        }
 
         event.getParticipants().add(participant);
 
@@ -96,7 +110,9 @@ public class EventsResource {
     public Event leave() {
         final Participant participant = requestParamService.getParticipant();
 
-        participantsRepository.delete(participant);
+        participant.setDeletedAt(LocalDateTime.now());
+
+        participantsRepository.update(participant);
 
         final Event event = requestParamService.getEvent();
 

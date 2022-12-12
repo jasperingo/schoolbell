@@ -6,6 +6,7 @@ import com.jasper.schoolbell.entities.EventOccurrence;
 import com.jasper.schoolbell.entities.Participant;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,6 +70,13 @@ public class EventsRepository {
         return configuration.getEntityManager()
             .createQuery("SELECT e FROM Event e JOIN FETCH e.participants LEFT JOIN FETCH e.eventOccurrences WHERE e.id = ?1", Event.class)
             .setParameter(1, id)
-            .getSingleResult();
+            .getResultStream()
+            .peek(event -> event.setParticipants(
+                event.getParticipants().stream()
+                    .filter(participant -> participant.getDeletedAt() == null)
+                    .collect(Collectors.toList())
+            ))
+            .findFirst()
+            .orElseThrow(NoResultException::new);
     }
 }

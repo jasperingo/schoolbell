@@ -15,7 +15,16 @@ public class ParticipantsRepository {
         configuration.getEntityManager().persist(participant);
     }
 
-    public void delete(final Participant participant) {
-        configuration.getEntityManager().remove(configuration.getEntityManager().merge(participant));
+    public void update(final Participant participant) {
+        configuration.getEntityManager().merge(participant);
     }
+
+    public Participant findByEventIdAndUserId(final Long eventId, final Long userId) {
+        return configuration.getEntityManager()
+            .createQuery("SELECT p FROM Participant p WHERE p.event.id = ?1 AND p.user.id = ?2", Participant.class)
+            .setParameter(1, eventId)
+            .setParameter(2, userId)
+            .getSingleResult();
+    }
+
 }

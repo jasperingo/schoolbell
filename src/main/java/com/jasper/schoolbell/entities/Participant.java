@@ -18,6 +18,8 @@ public class Participant {
     @Column(nullable = false)
     private boolean host;
 
+    private LocalDateTime deletedAt;
+
     @Column(nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
