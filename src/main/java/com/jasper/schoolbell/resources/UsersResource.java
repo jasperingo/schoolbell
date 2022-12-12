@@ -25,6 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("users")
 @ResponseMapper(UserDto.class)
@@ -88,7 +89,10 @@ public class UsersResource {
     @Path("{id}/events")
     @ResponseMapper(EventDto.WithRelations.class)
     public List<Event> getEvents() {
-        return eventsRepository.findManyByParticipantUserId(requestParamService.getUser().getId());
+        return eventsRepository.findManyByParticipantUserId(requestParamService.getUser().getId()).stream()
+            .peek(event -> event.setParticipants(eventsRepository.findHostParticipant(event)))
+            .peek(event -> event.setEventOccurrences(eventsRepository.findNextOrLastEventOccurrence(event)))
+            .collect(Collectors.toList());
     }
 
     @GET
@@ -97,6 +101,10 @@ public class UsersResource {
     @Path("{id}/event-occurrences")
     @ResponseMapper(EventOccurrenceDto.WithRelations.class)
     public List<EventOccurrence> getEventOccurrences() {
-        return eventOccurrencesRepository.findManyByEventParticipantUserId(requestParamService.getUser().getId());
+        return eventOccurrencesRepository.findManyByEventParticipantUserId(requestParamService.getUser().getId()).stream()
+                .peek(eo -> eo.getEvent().setParticipants(
+                    eventsRepository.findHostParticipant(eo.getEvent())
+                ))
+                .collect(Collectors.toList());
     }
 }

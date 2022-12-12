@@ -70,12 +70,21 @@ public class EventOccurrencesResource {
 
         eventOccurrencesRepository.update(eventOccurrence);
 
+        final String message = String.format(
+          "your event %s scheduled for %s, has been cancelled.",
+          eventOccurrence.getEvent().getTitle(),
+          eventOccurrence.getStartedAt()
+        );
+        
         callService.sendCall(
             eventOccurrence,
+            eventsRepository.findById(eventOccurrence.getEvent().getId()),
             String.format(
-                "Your event %s scheduled for %s, has been cancelled.",
+                "%s I repeat, %s",
+                message,
                 eventOccurrence.getEvent().getTitle(),
-                eventOccurrence.getStartedAt()
+                eventOccurrence.getStartedAt(),
+                message
             )
         );
 
@@ -94,14 +103,24 @@ public class EventOccurrencesResource {
         eventOccurrence.setStartedAt(startDateDto.getStartedAt());
 
         eventOccurrencesRepository.update(eventOccurrence);
+        
+        final String message = String.format(
+            "your event %s scheduled for %s, has been postponed to %s.",
+            eventOccurrence.getEvent().getTitle(),
+            oldStartAt,
+            eventOccurrence.getStartedAt()
+        );
 
         callService.sendCall(
             eventOccurrence,
+            eventsRepository.findById(eventOccurrence.getEvent().getId()),
             String.format(
-                "Your event %s scheduled for %s, has been postponed to %s.",
+                "%s I repeat, %s",
+                message,
                 eventOccurrence.getEvent().getTitle(),
                 oldStartAt,
-                eventOccurrence.getStartedAt()
+                eventOccurrence.getStartedAt(),
+                message
             )
         );
 
@@ -115,12 +134,21 @@ public class EventOccurrencesResource {
     public EventOccurrence remind() {
         final EventOccurrence eventOccurrence = requestParamService.getEventOccurrence();
 
+        final String message = String.format(
+           "please remember your event %s will start by %s.",
+            eventOccurrence.getEvent().getTitle(),
+            eventOccurrence.getStartedAt()
+        );
+        
         callService.sendCall(
             eventOccurrence,
+            eventsRepository.findById(eventOccurrence.getEvent().getId()),
             String.format(
-                "Please remember your event %s will start by %s.",
+                "%s I repeat, %s",
+                message,
                 eventOccurrence.getEvent().getTitle(),
-                eventOccurrence.getStartedAt()
+                eventOccurrence.getStartedAt(),
+                message
             )
         );
 

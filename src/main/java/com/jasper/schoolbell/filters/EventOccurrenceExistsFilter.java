@@ -2,6 +2,7 @@ package com.jasper.schoolbell.filters;
 
 import com.jasper.schoolbell.entities.EventOccurrence;
 import com.jasper.schoolbell.repositories.EventOccurrencesRepository;
+import com.jasper.schoolbell.repositories.EventsRepository;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -16,6 +17,9 @@ import javax.ws.rs.ext.Provider;
 @EventOccurrenceExists
 public class EventOccurrenceExistsFilter implements ContainerRequestFilter {
     @Inject
+    private EventsRepository eventsRepository;
+  
+    @Inject
     private EventOccurrencesRepository eventOccurrencesRepository;
 
     @Override
@@ -24,6 +28,8 @@ public class EventOccurrenceExistsFilter implements ContainerRequestFilter {
 
         try {
             final EventOccurrence eventOccurrence = eventOccurrencesRepository.findById(Long.parseLong(id));
+            
+            eventOccurrence.getEvent().setParticipants(eventsRepository.findHostParticipant(eventOccurrence.getEvent()));
 
             containerRequestContext.setProperty(EventOccurrence.class.getName(), eventOccurrence);
         } catch (NoResultException e) {

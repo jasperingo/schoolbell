@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JwtAuth
 @Path("events")
@@ -63,7 +64,10 @@ public class EventsResource {
 
     @GET
     public List<Event> getMany() {
-        return eventsRepository.findMany();
+        return eventsRepository.findMany().stream()
+            .peek(event -> event.setParticipants(eventsRepository.findHostParticipant(event)))
+            .peek(event -> event.setEventOccurrences(eventsRepository.findNextOrLastEventOccurrence(event)))
+            .collect(Collectors.toList());
     }
 
     @GET

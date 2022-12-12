@@ -25,9 +25,6 @@ public class CallService {
     private Configuration configuration;
 
     @Inject
-    private EventsRepository eventsRepository;
-
-    @Inject
     private AlertsRepository alertsRepository;
 
     private CallCreateDto send(final String recipientPhoneNumber) {
@@ -46,9 +43,7 @@ public class CallService {
     }
 
     @Asynchronous
-    public void sendCall(final EventOccurrence eventOccurrence, final String message) {
-        final Event event = eventsRepository.findById(eventOccurrence.getEvent().getId());
-
+    public void sendCall(final EventOccurrence eventOccurrence, final Event event, final String message) {
         final String phoneNumbers = event.getParticipants()
             .stream()
             .filter(participant -> !participant.isHost())
@@ -61,6 +56,8 @@ public class CallService {
                     : participant.getUser().getPhoneNumber()+","
             )
             .collect(Collectors.joining());
+        
+        System.out.println("==================================== "+ event.getParticipants().size()+" ++++++++++ "+phoneNumbers);
 
         alertsRepository.save(send(phoneNumbers).getEntries()
             .stream()

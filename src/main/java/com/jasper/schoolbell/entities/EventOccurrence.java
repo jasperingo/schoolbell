@@ -41,7 +41,7 @@ public class EventOccurrence {
     @Column(nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "eventId")
     private Event event;
 

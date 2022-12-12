@@ -20,8 +20,8 @@ public class CallDto {
         @XmlAttribute
         private boolean playBeep;
 
-        @XmlAttribute
-        private String voice = "en-US-Neural2-C";
+//        @XmlAttribute
+//        private String voice = "en-US-Neural2-C";
     }
 
     public static CallDto buildSay(final String message) {
