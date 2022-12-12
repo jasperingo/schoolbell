@@ -19,11 +19,11 @@ public class AlertsResource {
 
     @POST
     public CallDto start(
+        @FormParam("callSessionState")final String state,
         @FormParam("sessionId") final String callSessionId,
         @FormParam("isActive") final String isActive,
         @FormParam("amount") final Double amount,
-        @FormParam("durationInSeconds") final Long duration,
-        @FormParam("hangupCause") final String status
+        @FormParam("durationInSeconds") final Long duration
     ) {
         try {
             final Alert alert = alertsRepository.findByCallSessionId(callSessionId);
@@ -32,7 +32,7 @@ public class AlertsResource {
                 alert.setCost(amount);
                 alert.setActive(false);
                 alert.setDuration(duration);
-                alert.setStatus(status == null ? "Done" : status);
+                alert.setStatus(state);
 
                 alertsRepository.update(alert);
 
@@ -41,7 +41,7 @@ public class AlertsResource {
 
             return CallDto.buildSay(
                 String.format(
-                    "Hello %s %s, I am School bell. %s",
+                    "Hello %s %s, I am School bell. %s Thank you.",
                     alert.getParticipant().getUser().getFirstName(),
                     alert.getParticipant().getUser().getLastName(),
                     alert.getMessage()

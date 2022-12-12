@@ -79,13 +79,7 @@ public class EventOccurrencesResource {
         callService.sendCall(
             eventOccurrence,
             eventsRepository.findById(eventOccurrence.getEvent().getId()),
-            String.format(
-                "%s I repeat, %s",
-                message,
-                eventOccurrence.getEvent().getTitle(),
-                eventOccurrence.getStartedAt(),
-                message
-            )
+            String.format("%s I repeat, %s", message, message)
         );
 
         return eventOccurrence;
@@ -114,14 +108,7 @@ public class EventOccurrencesResource {
         callService.sendCall(
             eventOccurrence,
             eventsRepository.findById(eventOccurrence.getEvent().getId()),
-            String.format(
-                "%s I repeat, %s",
-                message,
-                eventOccurrence.getEvent().getTitle(),
-                oldStartAt,
-                eventOccurrence.getStartedAt(),
-                message
-            )
+            String.format("%s I repeat, %s", message, message)
         );
 
         return eventOccurrence;
@@ -143,13 +130,7 @@ public class EventOccurrencesResource {
         callService.sendCall(
             eventOccurrence,
             eventsRepository.findById(eventOccurrence.getEvent().getId()),
-            String.format(
-                "%s I repeat, %s",
-                message,
-                eventOccurrence.getEvent().getTitle(),
-                eventOccurrence.getStartedAt(),
-                message
-            )
+            String.format("%s I repeat, %s", message, message)
         );
 
         return eventOccurrence;
