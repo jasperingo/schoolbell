@@ -99,7 +99,7 @@ public class EventOccurrencesResource {
         eventOccurrencesRepository.update(eventOccurrence);
         
         final String message = String.format(
-            "your event %s scheduled for %s, has been postponed to %s.",
+            "your event %s scheduled for %s, has been rescheduled for %s.",
             eventOccurrence.getEvent().getTitle(),
             oldStartAt,
             eventOccurrence.getStartedAt()
