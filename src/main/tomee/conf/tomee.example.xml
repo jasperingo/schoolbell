@@ -4,7 +4,7 @@
       #  MySQL example
 
       JdbcDriver = com.mysql.jdbc.Driver
-      JdbcUrl = jdbc:mysql://host.docker.internal:3306/schoolbell
+      JdbcUrl = jdbc:mysql://localhost:3306/schoolbell
       UserName = root
       Password = [Your password]
   </Resource>

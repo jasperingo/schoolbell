@@ -70,6 +70,20 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.tomee.maven</groupId>
+                <artifactId>tomee-maven-plugin</artifactId>
+                <version>8.0.9</version>
+                <configuration>
+                    <context>ROOT</context>
+                    <tomeeVersion>8.0.9</tomeeVersion>
+                    <tomeeClassifier>plume</tomeeClassifier>
+                    <libs>
+                        <lib>mysql:mysql-connector-java:8.0.29</lib>
+                    </libs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
