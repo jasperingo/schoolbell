@@ -7,6 +7,11 @@
       JdbcUrl = jdbc:mysql://localhost:3306/schoolbell
       UserName = root
       Password = [Your password]
+      maxActive = 20
+      validationQuery = "select 1"
+      removeAbandonedTimeout = 60
+      testWhileIdle = true
+      timeBetweenEvictionRunsMillis = 300000
   </Resource>
 
 </tomee>
